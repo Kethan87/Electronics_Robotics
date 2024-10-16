@@ -3,9 +3,8 @@
 #esp.osdebug(None)
 #import webrepl
 #webrepl.start()
-from machine import Pin, ADC, PWM, I2C, SoftI2C
+from machine import Pin, ADC, PWM, I2C
 import Encoder
-import MPU6050_studentversion
 pin13 = Pin(13, Pin.OUT)
 pin13.value(0)
 
@@ -26,8 +25,3 @@ ADC_CS.width(ADC.WIDTH_12BIT)
 ADC_VS.width(ADC.WIDTH_12BIT)
 
 Encoder.InitEncoder(encA, encB)
-i2c = SoftI2C(scl=Pin(22), sda=Pin(21), freq=400000)
-imu = MPU6050_studentversion.MPU6050(i2c, 0x68)
-
-
-

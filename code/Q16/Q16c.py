@@ -16,15 +16,18 @@ coefficients = np.polyfit(I_combined, VCS_combined, 1)
 c2 = coefficients[0] * 1000  # slope
 I0 = coefficients[1]  # intercept
 
+
+print("I0: ",I0)
+
 # Predicted VCS based on the fit
 VCS_fit = c2 * I_combined + I0
 
 # Plot the original data and the fitted line
-plt.plot(I_positive, VCS_positive, label="Positive I [mA]", marker='o')
-plt.plot(I_negative, VCS_negative, label="Negative I [mA]", marker='o')
+plt.plot(I_positive, VCS_positive, label="Positive I [A]", marker='o')
+plt.plot(I_negative, VCS_negative, label="Negative I [A]", marker='o')
 plt.plot(I_combined, VCS_fit, label="Fitted Line", linestyle='--')
 
-plt.xlabel('Current (I) [mA]')
+plt.xlabel('Current (I) [A]')
 plt.ylabel('Voltage (VCS) [V]')
 plt.title('Current vs Voltage (VCS) with Linear Fit')
 plt.legend()
