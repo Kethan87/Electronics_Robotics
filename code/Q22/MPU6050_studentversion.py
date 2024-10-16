@@ -1,5 +1,6 @@
 import math
 import machine
+import HighLevelController
 
 # The function convert_to_int16(msb, lsb) converts 2 bytes to a signed integer.
 # Argument msb is the most significant byte, argument lsb is the least significant byte
@@ -27,12 +28,14 @@ class MPU6050():
         self.buf1 = bytearray([self.write, 0x3B])	# 0x3B is first address of acceleration data
         self.buf2 = bytearray([self.read])			# Bytearray is transmitted to request accelaration
         self.readBuffer = bytearray([0]*6)			# Bytearray is used to store the acceleration data
-        machine.mem8[0x14] = 20
-        machine.mem8[0x15] = 30
-        self.reg_acc_x = 0x3;
-        self.reg_acc_y = 0x4;
-        self.reg_acc_z = 0x5;
-        self.reg_tilt_angle = 0x6;
+        print("Initialize 20")
+        HighLevelController.reg[20] = 20
+        print("initialize 30")
+        HighLevelController.reg[21] = 30
+        self.reg_acc_x = 3;
+        self.reg_acc_y = 4;
+        self.reg_acc_z = 5;
+        self.reg_tilt_angle = 6;
         
     # The method readData() has no arguments and no return value. It reads the reads the acceleration and 
     # converts it into units of [m/s^2]. The acceleration is stored in list attribute acc
@@ -59,11 +62,14 @@ class MPU6050():
         
         ax = self.acc[0]  # Acceleration in x direction [m/s^2]
         ay = self.acc[1]  # Acceleration in y direction [m/s^2]
+        ay += 4.2
         az = self.acc[2]  # Acceleration in z direction [m/s^2]
 
         roll = math.atan2(ay, math.sqrt(ax**2 + az**2)) * (180 / math.pi)
 
-        pitch = math.atan2(-ax, math.sqrt(ay**2 + az**2)) * (180 / math.pi)
+        pitch = math.atan2(-ax, math.sqrt(ay**2 + az**2)) * (180 / math.pi) + 90
+        
+ 
 
         return roll, pitch
 
@@ -72,11 +78,18 @@ class MPU6050():
         ax = self.acc[0]  # Acceleration in x direction [m/s^2]
         ay = self.acc[1]  # Acceleration in y direction [m/s^2]
         az = self.acc[2]  # Acceleration in z direction [m/s^2]
-        machine.mem32[reg_acc_x] = ax
-        machine.mem32[reg_acc_y] = ay
-        machine.mem32[reg_acc_z] = az
-        machine.mem32[reg_tilt_angle] = bytearray(tiltAngles)
+        HighLevelController.reg[self.reg_acc_x] = int(ax)
+        HighLevelController.reg[self.reg_acc_y] = int(ay)
+        HighLevelController.reg[self.reg_acc_z] = int(az)
+        if abs(tiltAngles[0]) > abs(tiltAngles[1])	:
+            HighLevelController.reg[self.reg_tilt_angle] = int(tiltAngles[0])
+        else:
+            HighLevelController.reg[self.reg_tilt_angle] = int(tiltAngles[1])
+            
         
         
         
+
+
+
 

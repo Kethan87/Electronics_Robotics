@@ -3,7 +3,6 @@ void setup() {
   pinMode(12, OUTPUT);
 }
 
-int previousTime = 0;
 void loop() {
   digitalWrite(12, HIGH);
   Serial.write("Hello world");

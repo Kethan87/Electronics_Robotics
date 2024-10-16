@@ -1,23 +1,27 @@
 import boot
+import HighLevelController
+import MPU6050_studentversion
 
 
 while True:
     imu.TiltAngle()
-    roll = mem32[imu.reg_tilt_angle][0]
-    pitch = mem32[imu.reg_tilt_angle][1]
-    print("Roll: ", tiltangle[0])
-    print("Pitch: ", tiltangle[1])
+    tilt = HighLevelController.reg[imu.reg_tilt_angle]
     
-    if machine.mem8[0x14] != 0:
-        if abs(roll) < machine.mem8[0x14] and abs(pitch) < machine.mem8[0x14]:
-            #green led on red ledd off
-            
+    if HighLevelController.reg[20] != 0:
+        if abs(tilt) < HighLevelController.reg[20]:
+            RED_LED.value(0)
+            GREEN_LED.value(1)
         else:
-            #red led on green led off
+            RED_LED.value(1)
+            GREEN_LED.value(0)
     
-    if machine.mem8[0x15] != 0:
-        if abs(roll) < machine.mem8[0x15] and abs(pitch) < machine.mem8[0x15]:
-            #green led on red ledd off
-            
+    if HighLevelController.reg[21] != 0:
+        if abs(tilt) < HighLevelController.reg[21]:
+            RED_LED.value(0)
+            GREEN_LED.value(1)
         else:
-            #red led on green led off
+            RED_LED.value(1)
+            GREEN_LED.value(0)
+            #ADD BUZZZEERR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+

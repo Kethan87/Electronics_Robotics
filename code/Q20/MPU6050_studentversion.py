@@ -43,22 +43,20 @@ class MPU6050():
         
     # The method tiltAngle() first reads the acceleration in the 3 directions.
     # Then it calculates the tilt angle in degrees and returns it
-#     def tiltAngle(self):
-#         self.readData()
-#         tiltAngle = ...								# Enter here the formula(s) to calculate he tiltAngle in degrees
-#         return tiltAngle
     def tiltAngle(self):
         self.readData()
         
         ax = self.acc[0]  # Acceleration in x direction [m/s^2]
-        ay = self.acc[1]  # Acceleration in y direction [m/s^2]
+        ay = self.acc[1] + 4.2  # Acceleration in y direction [m/s^2]
         az = self.acc[2]  # Acceleration in z direction [m/s^2]
 
         roll = math.atan2(ay, math.sqrt(ax**2 + az**2)) * (180 / math.pi)
 
-        pitch = math.atan2(-ax, math.sqrt(ay**2 + az**2)) * (180 / math.pi)
+        pitch = -math.atan2(ax, math.sqrt(ay**2 + az**2)) * (180 / math.pi)
 
         return roll, pitch
+
+
 
 
 
