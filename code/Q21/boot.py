@@ -6,8 +6,12 @@
 from machine import Pin, ADC, PWM, I2C, SoftI2C, UART
 import Encoder
 import MPU6050_studentversion
+import HighLevelController
 pin13 = Pin(13, Pin.OUT)
 pin13.value(0)
+RED_LED = Pin(18, Pin.OUT)
+GREEN_LED = Pin(5, Pin.OUT)
+BLUE_LED = Pin(19, Pin.OUT)
 
 encA = 34
 encB = 35
@@ -28,7 +32,7 @@ ADC_VS.width(ADC.WIDTH_12BIT)
 Encoder.InitEncoder(encA, encB)
 i2c = SoftI2C(scl=Pin(22), sda=Pin(21), freq=400000)
 imu = MPU6050_studentversion.MPU6050(i2c, 0x68)
-
-
-
+uart = UART(1, 115200)
+uart.init(115200, bits=8, parity=None, stop=1)
+highLevelController = HighLevelController.HighLevelController(uart, None)
 
