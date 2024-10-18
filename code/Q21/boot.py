@@ -10,3 +10,4 @@ uart2 = UART(2, baudrate=115200, bits=8, parity=None, stop=1)
 
 # UART2 is now configured for communication.
 
+

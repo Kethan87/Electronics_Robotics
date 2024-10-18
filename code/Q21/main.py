@@ -13,8 +13,8 @@ def buzzer_off():
     BUZZER.duty(0)
 
 # Define the pins for switches
-SWITCH_1 = Pin(32, Pin.IN, Pin.PULL_UP)
-SWITCH_2 = Pin(33, Pin.IN, Pin.PULL_UP)
+SWITCH_1 = Pin(39, Pin.IN, Pin.PULL_DOWN)
+SWITCH_2 = Pin(36, Pin.IN, Pin.PULL_DOWN)
 
 # Initial values for LEDs and buzzer
 red_state = 0
@@ -55,4 +55,14 @@ while True:
                 buzzer_off()
             print("Buzzer toggled")
 
+    # Check switches and send messages
+    if SWITCH_1.value():
+        uart2.write("Switch 1 is pressed\n")
+        print("Switch 1 is pressed")
+        time.sleep(0.5)  # Debounce delay
+
+    if SWITCH_2.value():
+        uart2.write("Switch 2 is pressed\n")
+        print("Switch 2 is pressed")
+        time.sleep(0.5)  # Debounce delay
 
