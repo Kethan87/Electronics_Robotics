@@ -3,7 +3,14 @@ import boot
 # Setup UART2
 uart2 = UART(2, baudrate=115200, bits=8, parity=None, stop=1)
 
-BUZZER = Pin(22, Pin.OUT)
+BUZZER = PWM(Pin(4,Pin.OUT), freq=440, duty=0)
+
+def buzzer_on():
+    BUZZER.duty(520)
+    BUZZER.freq(500)
+
+def buzzer_off():
+    BUZZER.duty(0)
 
 # Define the pins for switches
 SWITCH_1 = Pin(32, Pin.IN, Pin.PULL_UP)
@@ -40,21 +47,12 @@ while True:
             BLUE_LED.value(blue_state)
             print("Blue LED toggled")
 
-#         elif char == 'A':
-#             buzzer_state = not buzzer_state
-#             if buzzer_state:
-#                 BUZZER.freq(500)  # Set frequency to 500Hz
-#             BUZZER.value(buzzer_state)
-#             print("Buzzer toggled")
+        elif char == 'A':
+            buzzer_state = not buzzer_state
+            if buzzer_state:
+                buzzer_on()  # Set frequency to 500Hz
+            else:   
+                buzzer_off()
+            print("Buzzer toggled")
 
-#     # Check switches and send messages
-#     if not SWITCH_1.value():
-#         uart2.write("Switch 1 is pressed\n")
-#         print("Switch 1 is pressed")
-#         time.sleep(0.5)  # Debounce delay
-# 
-#     if not SWITCH_2.value():
-#         uart2.write("Switch 2 is pressed\n")
-#         print("Switch 2 is pressed")
-#         time.sleep(0.5)  # Debounce delay
 

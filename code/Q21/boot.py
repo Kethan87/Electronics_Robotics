@@ -1,4 +1,4 @@
-from machine import Pin, UART
+from machine import Pin, UART, PWM
 import time
 
 RED_LED = Pin(18, Pin.OUT)
