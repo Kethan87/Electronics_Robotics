@@ -13,6 +13,8 @@ RED_LED = Pin(18, Pin.OUT)
 GREEN_LED = Pin(5, Pin.OUT)
 BLUE_LED = Pin(19, Pin.OUT)
 
+tone = 5000
+
 encA = 34
 encB = 35
 
@@ -35,4 +37,7 @@ imu = MPU6050_studentversion.MPU6050(i2c, 0x68)
 uart = UART(1, 115200)
 uart.init(115200, bits=8, parity=None, stop=1)
 highLevelController = HighLevelController.HighLevelController(uart, None)
+
+
+
 
