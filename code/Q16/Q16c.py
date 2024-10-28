@@ -10,15 +10,15 @@ VCS_negative = [1.7, 1.55, 1.39, 1.26, 1.07, 0.91, 0.74, 0.61, 0.45]
 I_combined = np.array(I_positive + I_negative)
 VCS_combined = np.array(VCS_positive + VCS_negative)
 
-coefficients = np.polyfit(I_combined, VCS_combined, 1)
+coefficients = np.polyfit(VCS_combined, I_combined, 1)
 
 # Extract c2 and I0 from the coefficients
-c2 = coefficients[0] * 1000  # slope
+c2 = coefficients[0] # slope
 I0 = coefficients[1]  # intercept
 
 
 print("I0: ",I0)
-
+print("C2: ", c2)
 # Predicted VCS based on the fit
 VCS_fit = c2 * I_combined + I0
 

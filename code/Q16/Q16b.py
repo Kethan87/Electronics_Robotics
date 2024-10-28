@@ -9,8 +9,8 @@ VCS_negative = [1.7, 1.55, 1.39, 1.26, 1.07, 0.91, 0.74, 0.61, 0.45]
 plt.plot(I_positive, VCS_positive, label="Positive I [A]", marker='o')
 plt.plot(I_negative, VCS_negative, label="Negative I [A]", marker='o')
 
-plt.xlabel('Current (I) [A]')
-plt.ylabel('Voltage (VCS) [V]')
+plt.xlabel('Voltage (VCS) [V]')
+plt.ylabel('Current (I) [A]')
 plt.title('Current vs Voltage (VCS)')
 plt.legend()
 plt.grid(True)
