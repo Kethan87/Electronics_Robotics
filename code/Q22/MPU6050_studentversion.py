@@ -28,10 +28,8 @@ class MPU6050():
         self.buf1 = bytearray([self.write, 0x3B])	# 0x3B is first address of acceleration data
         self.buf2 = bytearray([self.read])			# Bytearray is transmitted to request accelaration
         self.readBuffer = bytearray([0]*6)			# Bytearray is used to store the acceleration data
-        print("Initialize 20")
-        HighLevelController.reg[20] = 20
-        print("initialize 30")
-        HighLevelController.reg[21] = 30
+        HighLevelController.reg[20] = 0
+        HighLevelController.reg[21] = 0
         self.reg_acc_x = 3;
         self.reg_acc_y = 4;
         self.reg_acc_z = 5;
@@ -89,6 +87,8 @@ class MPU6050():
         
         
         
+
+
 
 
 

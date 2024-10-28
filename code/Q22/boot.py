@@ -34,9 +34,10 @@ ADC_VS.width(ADC.WIDTH_12BIT)
 Encoder.InitEncoder(encA, encB)
 i2c = SoftI2C(scl=Pin(22), sda=Pin(21), freq=400000)
 imu = MPU6050_studentversion.MPU6050(i2c, 0x68)
-uart = UART(1, 115200)
-uart.init(115200, bits=8, parity=None, stop=1)
-highLevelController = HighLevelController.HighLevelController(uart, None)
+uart2 = UART(2, baudrate=115200, bits=8, parity=None, stop=1)
+highLevelController = HighLevelController.HighLevelController(uart2, None)
+
+
 
 
 

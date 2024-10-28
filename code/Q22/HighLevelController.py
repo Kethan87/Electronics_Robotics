@@ -34,6 +34,7 @@ class HighLevelController:
     """
     def readFromUart(self):
         n = self.uart.readinto(self.uart_buf)	# Read data from the uart
+
         if n is None:
             return								# No data received -> return
         commands = self.uart_asd.processInput(self.uart_buf[0:n])	# Process incoming data from the UART
@@ -63,8 +64,10 @@ class HighLevelController:
     """
     def processHighLevelCommands(self, commands, src):	# src is source of read request (uart or tcp)
         for c in commands:
+            print("C shit: ", c)
             if c[0]:							# c[0] is a boolean that is True for a read request
                 self.transmitReadResponse(c[1],c[2],src)	# c[1] is the address, c[2] is the number of data to be transmitted
+                exit
             else:								# c[0] = False  -->  Write command
                 address = c[1]
                 if address >= 9:				# First 9 addresses are read only (sensor data)
@@ -175,3 +178,7 @@ class AsciiStreamDecoder:
                         self.arg2[self.i2] = c	# Store character in arg2
                         self.i2 += 1			# Increase i2
         return result
+
+
+
+
