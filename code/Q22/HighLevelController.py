@@ -64,7 +64,6 @@ class HighLevelController:
     """
     def processHighLevelCommands(self, commands, src):	# src is source of read request (uart or tcp)
         for c in commands:
-            print("C shit: ", c)
             if c[0]:							# c[0] is a boolean that is True for a read request
                 self.transmitReadResponse(c[1],c[2],src)	# c[1] is the address, c[2] is the number of data to be transmitted
                 exit
