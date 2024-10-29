@@ -20,7 +20,6 @@ while True:
     tilt = HighLevelController.reg[imu.reg_tilt_angle]
     dc = HighLevelController.reg[22]
     
-    print("Register 20: ", HighLevelController.reg[20])
     
     if HighLevelController.reg[20] != 0:
         if abs(tilt) < HighLevelController.reg[20]:
@@ -53,8 +52,6 @@ while True:
     highLevelController.readFromTCP()
     if abs(dc) <= 950 :
         volt = (ADC_VS.read_uv() / 1000000)
-        print("Volt: ", volt)
-        print("Encoder Frequency: ",Encoder.GetFrequency())
         if dc > 0 :
             HighLevelController.reg[22] = dc
             pin25.duty(dc)
