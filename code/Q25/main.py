@@ -7,6 +7,9 @@ BUZZER = PWM(Pin(4,Pin.OUT), freq=440, duty=0)
 STATE = 0
 DUTY_CYCLE = 0
 
+pin13 = Pin(13, Pin.OUT)
+pin13.on()
+
 
 def buzzer_on():
     BUZZER.duty(520)
@@ -29,14 +32,12 @@ def stateControl():
     limitTorque = HighLevelController.reg[11]
     currentRPM = HighLevelController.reg[7]
     currentTorque = HighLevelController.reg[8]
-    print("Goal RPM: ", goalRPM)
-    print("Limit Torque: ", limitTorque)
-    print("currentRPM: ", currentRPM)
-    print("currentTorque: ", currentTorque)
-    if currentRPM <= goalRPM and currentTorque <= limitTorque:
-        DUTY_CYCLE += 1
-    else:
-        DUTY_CYCLE -= 1
+    
+    #TODO: absolute
+    if currentRPM <= goalRPM and currentTorque <= limitTorque:   
+            DUTY_CYCLE += 1
+        else:
+            DUTY_CYCLE -= 1
         
     motorControl()
 
@@ -72,6 +73,8 @@ def configureHighLevelDriver():
     HighLevelController.reg[8] = int(HighLevelController.reg[0] * 0.00990217) # from Question 18
 
 def motorControl():
+    global DUTY_CYCLE
+    print(DUTY_CYCLE)
     tiltControl()
     if abs(DUTY_CYCLE) <= 950 :
         volt = (ADC_VS.read_uv() / 1000000)
@@ -100,7 +103,7 @@ while True:
     else:
         stateOff()
         
-    print("Duty Cycle: ", DUTY_CYCLE)
+#     print("Duty Cycle: ", DUTY_CYCLE)
         
     
     time.sleep(0.1)
