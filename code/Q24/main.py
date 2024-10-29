@@ -18,6 +18,7 @@ while True:
     highLevelController.readFromUart()
     imu.TiltAngle()
     tilt = HighLevelController.reg[imu.reg_tilt_angle]
+    dc = HighLevelController.reg[22]
     
     if HighLevelController.reg[20] != 0:
         if abs(tilt) < HighLevelController.reg[20]:
@@ -38,17 +39,29 @@ while True:
             RED_LED.value(1)
             GREEN_LED.value(0)
             buzzer_on()
+            dc = 0
     
     i0 = -3.266 #Amp from question 18
     c2 = 1.918 #slope from question 18
     
-    HighLevelController.reg[0] = int(i0 + c2 * ADC_VS.read_uv()) #Motor current
+    HighLevelController.reg[0] = int(i0 + c2 * (ADC_VS.read_uv() / 1000)) #Motor current
     HighLevelController.reg[1] = ADC_VS.read_uv()
     HighLevelController.reg[2] = Encoder.GetFrequency()
     HighLevelController.reg[7] = int(HighLevelController.reg[2] / HighLevelController.reg[13]) #Encoder frequency / Encoder pulses
     HighLevelController.reg[8] = int(HighLevelController.reg[0] * 0.00990217) # from Question 18
     
     highLevelController.readFromTCP()
+    
+    if abs(dc) <= 950 :
+        volt = (ADC_VS.read_uv() / 1000000)
+        print("Volt: ", volt)
+        print("Encoder Frequency: ",Encoder.GetFrequency())
+        if dc > 0 :
+            pin25.duty(dc)
+            pin26.duty(0)
+        else:
+            pin25.duty(0)
+            pin26.duty(dc * -1)
     
     time.sleep(0.1)
 
