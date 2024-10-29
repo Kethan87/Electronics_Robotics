@@ -20,15 +20,16 @@ while True:
     tilt = HighLevelController.reg[imu.reg_tilt_angle]
     dc = HighLevelController.reg[22]
     
+    print("Register 20: ", HighLevelController.reg[20])
+    
     if HighLevelController.reg[20] != 0:
         if abs(tilt) < HighLevelController.reg[20]:
             RED_LED.value(0)
             GREEN_LED.value(1)
-            buzzer_off()
-        elif abs(tilt) < HighLevelController.reg[21]:
+        else:
             RED_LED.value(1)
             GREEN_LED.value(0)
-            buzzer_off()
+        
     
     if HighLevelController.reg[21] != 0:
         if abs(tilt) < HighLevelController.reg[21]:
@@ -38,8 +39,7 @@ while True:
         else:
             RED_LED.value(1)
             GREEN_LED.value(0)
-            buzzer_on()
-            dc = 0
+#             buzzer_on()
     
     i0 = -3.266 #Amp from question 18
     c2 = 1.918 #slope from question 18
@@ -51,15 +51,16 @@ while True:
     HighLevelController.reg[8] = int(HighLevelController.reg[0] * 0.00990217) # from Question 18
     
     highLevelController.readFromTCP()
-    
     if abs(dc) <= 950 :
         volt = (ADC_VS.read_uv() / 1000000)
         print("Volt: ", volt)
         print("Encoder Frequency: ",Encoder.GetFrequency())
         if dc > 0 :
+            HighLevelController.reg[22] = dc
             pin25.duty(dc)
             pin26.duty(0)
         else:
+            HighLevelController.reg[23] = dc
             pin25.duty(0)
             pin26.duty(dc * -1)
     
