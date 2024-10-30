@@ -21,6 +21,7 @@ def buzzer_off():
 def stateOff():
     global DUTY_CYCLE
     DUTY_CYCLE = 0
+    motorControl()
 
 def stateTest():
     pin25.duty(HighLevelController.reg[22])
@@ -33,11 +34,21 @@ def stateControl():
     currentRPM = HighLevelController.reg[7]
     currentTorque = HighLevelController.reg[8]
     
-    #TODO: absolute
-    if currentRPM <= goalRPM and currentTorque <= limitTorque:   
-            DUTY_CYCLE += 1
-        else:
-            DUTY_CYCLE -= 1
+#     print("Goal RPM: ", goalRPM)
+#     print("limitTorque: ", goalRPM)
+#     print("currentRPM: ", currentRPM)
+#     print("currentTorque: ", currentTorque)
+    
+    direction = 2
+    if goalRPM < 0:
+        direction = -2
+        
+    if abs(currentRPM) <= abs(goalRPM) and currentTorque < limitTorque:
+        DUTY_CYCLE += direction
+    else:
+        DUTY_CYCLE -= direction
+        
+        
         
     motorControl()
 
@@ -59,22 +70,22 @@ def tiltControl():
         else:
             RED_LED.value(1)
             GREEN_LED.value(0)
-            buzzer_on()
+#             buzzer_on()
             DUTY_CYCLE = 0
 
 def configureHighLevelDriver():
     i0 = -3.266 #Amp from question 18
     c2 = 1.918 #slope from question 18
     
-    HighLevelController.reg[0] = int(i0 + c2 * (ADC_VS.read_uv() / 1000)) #Motor current
-    HighLevelController.reg[1] = ADC_VS.read_uv()
+    HighLevelController.reg[0] = int(ADC_VS.read_uv() / 1000)
+    HighLevelController.reg[1] = int(i0 + c2 * (ADC_VS.read_uv() / 1000))
     HighLevelController.reg[2] = Encoder.GetFrequency()
     HighLevelController.reg[7] = int(HighLevelController.reg[2] / HighLevelController.reg[13]) #Encoder frequency / Encoder pulses
-    HighLevelController.reg[8] = int(HighLevelController.reg[0] * 0.00990217) # from Question 18
+    HighLevelController.reg[8] = int(HighLevelController.reg[1] * 0.00990217) # from Question 18
 
 def motorControl():
     global DUTY_CYCLE
-    print(DUTY_CYCLE)
+#     print(DUTY_CYCLE)
     tiltControl()
     if abs(DUTY_CYCLE) <= 950 :
         volt = (ADC_VS.read_uv() / 1000000)
@@ -92,8 +103,18 @@ while True:
     state = tcp.getState()
     highLevelController.readFromUart()
     imu.TiltAngle()
-    highLevelController.readFromTCP()
     configureHighLevelDriver()
+    highLevelController.readFromTCP()
+    
+    goalRPM = HighLevelController.reg[10]
+    limitTorque = HighLevelController.reg[11]
+    currentRPM = HighLevelController.reg[7]
+    currentTorque = HighLevelController.reg[8]
+    
+#     print("Goal RPM: ", goalRPM)
+#     print("limitTorque: ", goalRPM)
+#     print("currentRPM: ", currentRPM)
+#     print("currentTorque: ", currentTorque)
     
     
     if HighLevelController.reg[9] == 1:
