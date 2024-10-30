@@ -98,6 +98,7 @@ def stateControl():
     motorControl()
 
 def tiltControl():
+    global DUTY_CYCLE
     if HighLevelController.reg[20] != 0:
         if abs(HighLevelController.reg[imu.reg_tilt_angle]) < HighLevelController.reg[20]:
             RED_LED.value(0)
