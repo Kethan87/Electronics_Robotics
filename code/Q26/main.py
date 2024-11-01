@@ -74,21 +74,12 @@ def stateTest():
 
 def stateControl():
     global DUTY_CYCLE
-    goalRPM = HighLevelController.reg[10]
-    limitTorque = HighLevelController.reg[11]
-    currentRPM = HighLevelController.reg[7]
-    currentTorque = HighLevelController.reg[8]
-    
-#     print("Goal RPM: ", goalRPM)
-#     print("limitTorque: ", goalRPM)
-#     print("currentRPM: ", currentRPM)
-#     print("currentTorque: ", currentTorque)
     
     direction = 2
-    if goalRPM < 0:
+    if HighLevelController.reg[10] < 0:
         direction = -2
        
-    if abs(currentRPM) <= abs(goalRPM) and (currentTorque < limitTorque or limitTorque == 0):
+    if abs(HighLevelController.reg[7]) <= abs(HighLevelController.reg[10]) and (HighLevelController.reg[8] < HighLevelController.reg[11] or HighLevelController.reg[11] == 0):
         DUTY_CYCLE += direction
     else:
         DUTY_CYCLE -= direction
@@ -131,7 +122,7 @@ def configureHighLevelDriver():
 
 def motorControl():
     global DUTY_CYCLE
-#     print(DUTY_CYCLE)
+
     tiltControl()
     if abs(DUTY_CYCLE) <= 950 :
         volt = (ADC_VS.read_uv() / 1000000)
@@ -152,37 +143,15 @@ while True:
     configureHighLevelDriver()
     highLevelController.readFromTCP()
     
-    goalRPM = HighLevelController.reg[10]
-    limitTorque = HighLevelController.reg[11]
-    currentRPM = HighLevelController.reg[7]
-    currentTorque = HighLevelController.reg[8]
-    
-#     print("Goal RPM: ", goalRPM)
-#     print("limitTorque: ", goalRPM)
-#     print("currentRPM: ", currentRPM)
-#     print("currentTorque: ", currentTorque)
-    
-    
     if HighLevelController.reg[9] == 1:
         stateTest()
     elif HighLevelController.reg[9] == 2:
         stateControl()
     else:
         stateOff()
-
-    
-#     if HighLevelController.reg[9] == 1:
-#         stateTest()
-#     elif HighLevelController.reg[9] == 2:
-#         stateControl()
-#     else:
-#         stateOff()
-        
-#     print("Duty Cycle: ", DUTY_CYCLE)
-#     print("Current State: ", HighLevelController.reg[9])
-        
     
     time.sleep(0.1)
+
 
 
 
