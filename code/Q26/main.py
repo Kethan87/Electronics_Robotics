@@ -79,13 +79,15 @@ def stateControl():
     currentRPM = HighLevelController.reg[7]
     currentTorque = HighLevelController.reg[8]
     
-    ki = 0.01
+    ki = 3
     error = goalRPM - currentRPM
     timeSample = 0.2 #the sleep time in the main loop times 2
     
-    deltaDC = ki * error * timeSample
+    deltaDC = int(ki * error * timeSample)
     
-    if abs(currentRPM) <= abs(goalRPM) and (currentTorque < limitTorque or limitTorque == 0):
+    #abs(currentRPM) <= abs(goalRPM) 
+    
+    if (currentTorque < limitTorque or limitTorque == 0):
         DUTY_CYCLE += deltaDC
     else:
         DUTY_CYCLE -= deltaDC
@@ -157,6 +159,8 @@ while True:
         stateOff()
     
     time.sleep(0.1)
+
+
 
 
 
