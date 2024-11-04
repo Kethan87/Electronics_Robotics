@@ -15,6 +15,7 @@ while True:
     dc = int(input("Input a duty cycle of between -950 and 950."))
     if abs(dc) <= 950 :
         volt = (ADC_VS.read_uv() / 1000000)
+        
         print("Volt: ", volt)
         print("Encoder Frequency: ",Encoder.GetFrequency())
         if dc > 0 :
@@ -23,9 +24,7 @@ while True:
         else:
             pin25.duty(0)
             pin26.duty(dc * -1)
-    i0 = 1.7 #Amp
-    c2 = 521 #slope
-#     print("Calculate I: ",i0 + c2 * volt)
-    
-
-
+    i0 = -3.266 #milliamp from question 18
+    c2 = 1.918 #slope from question 18
+    amp = (i0 + c2 * (ADC_CS.read_uv() / 1000)) / 1000
+    print("AMP: ", amp)
