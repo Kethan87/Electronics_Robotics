@@ -79,13 +79,13 @@ def stateControl():
     currentRPM = HighLevelController.reg[7]
     currentTorque = HighLevelController.reg[8]
     
-    ki = 3
+    ki = HighLevelController.reg[12]
     error = goalRPM - currentRPM
     timeSample = 0.2 #the sleep time in the main loop times 2
     
     deltaDC = int(ki * error * timeSample) 
     
-    if (currentTorque < limitTorque or limitTorque == 0):
+    if (abs(currentTorque) < limitTorque or limitTorque == 0):
         DUTY_CYCLE += deltaDC
     else:
         DUTY_CYCLE -= deltaDC
@@ -117,15 +117,15 @@ def tiltControl():
             DUTY_CYCLE = 0
 
 def configureHighLevelDriver():
-    i0 = -3.266 #Amp from question 18
+    i0 = -2966 #milliamp from question 18
     c2 = 1.918 #slope from question 18
     
     HighLevelController.reg[0] = int(4.8017 * (ADC_VS.read_uv() / 1000))
-    HighLevelController.reg[1] = int(i0 + c2 * (ADC_CS.read_uv() / 10000))
+    HighLevelController.reg[1] = int(i0 + c2 * (ADC_CS.read_uv() / 1000))
     HighLevelController.reg[2] = Encoder.GetFrequency()
-    HighLevelController.reg[7] = int(HighLevelController.reg[2] / HighLevelController.reg[13]) #Encoder frequency / Encoder pulses
-    HighLevelController.reg[8] = int(HighLevelController.reg[1] * 0.00990217) # from Question 18
-    
+    HighLevelController.reg[7] = int((HighLevelController.reg[2] * 60 / (HighLevelController.reg[14] / 1000)) / HighLevelController.reg[13]) #Encoder frequency / Encoder pulses
+    HighLevelController.reg[8] = int(((HighLevelController.reg[1] - HighLevelController.reg[18]) * 0.00990217) * (HighLevelController.reg[14] / 1000)) # from Question 18
+
 def motorControl():
     global DUTY_CYCLE
 
@@ -156,13 +156,3 @@ while True:
         stateOff()
     
     time.sleep(0.1)
-
-
-
-
-
-
-
-
-
-

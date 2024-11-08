@@ -40,15 +40,15 @@ while True:
             GREEN_LED.value(0)
 #             buzzer_on()
     
-    i0 = -3.266 #Amp from question 18
+    i0 = -2966 #milliamp from question 18
     c2 = 1.918 #slope from question 18
     
-    HighLevelController.reg[0] = int(i0 + c2 * (ADC_VS.read_uv() / 1000)) #Motor current
-    HighLevelController.reg[1] = ADC_VS.read_uv()
+    HighLevelController.reg[0] = int(4.8017 * (ADC_VS.read_uv() / 1000))
+    HighLevelController.reg[1] = int(i0 + c2 * (ADC_CS.read_uv() / 1000))
     HighLevelController.reg[2] = Encoder.GetFrequency()
-    HighLevelController.reg[7] = int(HighLevelController.reg[2] / HighLevelController.reg[13]) #Encoder frequency / Encoder pulses
-    HighLevelController.reg[8] = int(HighLevelController.reg[0] * 0.00990217) # from Question 18
-    
+    HighLevelController.reg[7] = int((HighLevelController.reg[2] * 60 / (HighLevelController.reg[14] / 1000)) / HighLevelController.reg[13]) #Encoder frequency / Encoder pulses
+    HighLevelController.reg[8] = int(((HighLevelController.reg[1] - HighLevelController.reg[18]) * 0.00990217) * (HighLevelController.reg[14] / 1000)) # from Question 18
+   
     highLevelController.readFromTCP()
     if abs(dc) <= 950 :
         volt = (ADC_VS.read_uv() / 1000000)
