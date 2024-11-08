@@ -120,18 +120,17 @@ def configureHighLevelDriver():
     i0 = -3.266 #Amp from question 18
     c2 = 1.918 #slope from question 18
     
-    HighLevelController.reg[0] = int(ADC_VS.read_uv() / 1000)
-    HighLevelController.reg[1] = int(i0 + c2 * (ADC_VS.read_uv() / 1000))
+    HighLevelController.reg[0] = int(4.8017 * (ADC_VS.read_uv() / 1000))
+    HighLevelController.reg[1] = int(i0 + c2 * (ADC_CS.read_uv() / 10000))
     HighLevelController.reg[2] = Encoder.GetFrequency()
     HighLevelController.reg[7] = int(HighLevelController.reg[2] / HighLevelController.reg[13]) #Encoder frequency / Encoder pulses
     HighLevelController.reg[8] = int(HighLevelController.reg[1] * 0.00990217) # from Question 18
-
+    
 def motorControl():
     global DUTY_CYCLE
 
     tiltControl()
     if abs(DUTY_CYCLE) <= 950 :
-        volt = (ADC_VS.read_uv() / 1000000)
         if DUTY_CYCLE > 0 :
             pin25.duty(DUTY_CYCLE)
             pin26.duty(0)

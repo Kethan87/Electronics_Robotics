@@ -29,15 +29,21 @@ def stateTest():
 
 def stateControl():
     global DUTY_CYCLE
+    goalRPM = HighLevelController.reg[10]
+    limitTorque = HighLevelController.reg[11]
+    currentRPM = HighLevelController.reg[7]
+    currentTorque = HighLevelController.reg[8]
     
-    direction = 2
-    if HighLevelController.reg[10] < 0:
-        direction = -2
-       
-    if abs(HighLevelController.reg[7]) <= abs(HighLevelController.reg[10]) and (HighLevelController.reg[8] < HighLevelController.reg[11] or HighLevelController.reg[11] == 0):
-        DUTY_CYCLE += direction
+    ki = 3
+    error = goalRPM - currentRPM
+    timeSample = 0.2 #the sleep time in the main loop times 2
+    
+    deltaDC = int(ki * error * timeSample) 
+    
+    if (currentTorque < limitTorque or limitTorque == 0):
+        DUTY_CYCLE += deltaDC
     else:
-        DUTY_CYCLE -= direction
+        DUTY_CYCLE -= deltaDC
         
     motorControl()
 
@@ -59,7 +65,7 @@ def tiltControl():
         else:
             RED_LED.value(1)
             GREEN_LED.value(0)
-#             buzzer_on()
+            buzzer_on()
             DUTY_CYCLE = 0
 
 def configureHighLevelDriver():
