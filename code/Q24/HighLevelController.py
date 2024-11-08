@@ -28,13 +28,13 @@ class HighLevelController:
         self.tcp_asd = AsciiStreamDecoder()		# object that processes the incoming stream from TCP
         
         #initialize characteristics of the motor controller
-        reg[13] = 700  # Encoder pulses per revol
-        reg[14] = 44  # Gear trasmission
-        reg[15] = 4370  # rated speed
+        reg[13] = 16  # Encoder pulses per revol
+        reg[14] = int(43.8 * 1000)  # Gear trasmission
+        reg[15] = 204  # rated speed
         reg[16] = 45 # rated torque
-        reg[17] = 0  # rated current
-        reg[18] = 350 # rated speed
-        reg[19] = 0  # armature resistance
+        reg[17] = 7000  # rated current
+        reg[18] = 308 # no-load current
+        reg[19] = 1710  # armature resistance
         
     
     """
@@ -77,6 +77,7 @@ class HighLevelController:
             if c[0]:							# c[0] is a boolean that is True for a read request
                 self.transmitReadResponse(c[1],c[2],src)	# c[1] is the address, c[2] is the number of data to be transmitted
             else:								# c[0] = False  -->  Write command
+                print("Commands: ", c)
                 address = c[1]
                 if address >= 9:				# First 9 addresses are read only (sensor data)
                     reg[address] = c[2]	# c[2] is the data
@@ -97,6 +98,8 @@ class HighLevelController:
             self.uart.write(tx.encode())  # Convert string to ASCII characters and transmit it via the uart
         else:
             self.tcp.transmit(tx)
+            
+        
 
 
 class AsciiStreamDecoder:
