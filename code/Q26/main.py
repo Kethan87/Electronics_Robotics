@@ -83,9 +83,7 @@ def stateControl():
     error = goalRPM - currentRPM
     timeSample = 0.2 #the sleep time in the main loop times 2
     
-    deltaDC = int(ki * error * timeSample)
-    
-    #abs(currentRPM) <= abs(goalRPM) 
+    deltaDC = int(ki * error * timeSample) 
     
     if (currentTorque < limitTorque or limitTorque == 0):
         DUTY_CYCLE += deltaDC
@@ -115,7 +113,7 @@ def tiltControl():
         else:
             RED_LED.value(1)
             GREEN_LED.value(0)
-#             buzzer_on()
+            buzzer_on()
             DUTY_CYCLE = 0
 
 def configureHighLevelDriver():
@@ -159,6 +157,8 @@ while True:
         stateOff()
     
     time.sleep(0.1)
+
+
 
 
 
